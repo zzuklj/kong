@@ -62,6 +62,9 @@ subprojects {
         //spring cloud framework
         compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
+        //third party util
+        compile "com.google.guava:guava:27.1-jre"
+        
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
 
