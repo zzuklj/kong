@@ -1,0 +1,100 @@
+eureka:
+  client:
+      serviceUrl:
+         defaultZone: http://127.0.0.1:8761/eureka/
+      healthcheck:
+         enabled: true
+  instance:
+      lease-expiration-duration-in-seconds: 30
+      lease-renewal-interval-in-seconds: 10
+      hostname: ${spring.cloud.client.ip-address}
+
+spring:
+  profiles: dev
+  application:
+      name: kong-upms-impl
+  kafka:
+    bootstrap-servers: 192.168.137.55:39092
+    consumer:
+      group-id: dangjian-user-center-consumer-dev
+    producer:
+      client-id: dangjian-user-center-producer-dev
+
+  data:
+    elasticsearch:
+      cluster-nodes: 192.168.137.55:9300
+      cluster-name: my-es-cluster
+
+  elasticsearch:
+      rest:
+        uris: ["http://192.168.137.55:9200"]
+
+  #数据源
+  datasource:
+    url: jdbc:mysql://192.168.137.55:3306/user_center?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false
+    username: dangjian
+    password: uNdvlOK5vMkqU6Xx15vtmEDdxzniQiuE
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+
+    #测试
+#  redis:
+#    database: 0
+#    host: 192.168.137.57
+#    port: 6379
+#    password: 0LqWT5TZxYlttgKQZKqckF6LKGJlDoFnl6aGYSJQ29m3PD1UAFdKgAX0OJHUGLoZ
+
+  redis:
+    database: 3
+    host: 192.168.137.55
+    port: 6379
+    password: NMNgPYbG21GNT80JqqSneVzwj5sfQZt87tKc9RLqdf7oo8uyyuRsh9yGsI2wesiH
+    timeout: 15000
+    maxTotal: 500
+    maxIdle: 5
+    maxWaitMillis: 100000
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+  session:
+    store-type: redis
+
+  resources:
+    static-locations: classpath:/static/
+
+service-center-impl:
+  ribbon:
+    ConnectTimeout: 60000
+    ReadTimeout: 60000
+
+druid:
+  userName: admin
+  password: 123456
+
+#空
+feignUrl:
+  user:
+  activity:
+  message:
+  wtask:
+  web:
+  app:
+  integral:
+  community:
+  map:

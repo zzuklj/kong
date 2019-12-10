@@ -1,0 +1,7 @@
+jar {
+    archiveBaseName = 'kong-common'
+}
+
+dependencies {
+    
+}

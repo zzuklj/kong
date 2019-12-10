@@ -1,0 +1,8 @@
+jar {
+    archiveBaseName = 'kong-upms-impl'
+    version = ''
+}
+
+dependencies {
+    implementation project(':kong-upms-api')
+}

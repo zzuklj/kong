@@ -1,0 +1,98 @@
+/*
+    buildscript代码块中的声明是gradle脚本自身需要的资源。
+    可以声明的资源包括依赖项、第三方插件、maven仓库地址等。
+    gradle在执行脚本时，会优先执行buildscript代码块中的内容，然后才会执行剩余的build脚本。
+*/
+buildscript {
+    ext {
+        springBootVersion = '2.2.2.RELEASE'
+        springCloudVersion = 'Hoxton.RELEASE'
+    }
+    repositories {
+        mavenLocal()
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+    }
+    dependencies {
+        classpath group: 'org.yaml', name: 'snakeyaml', version: '1.24'
+        /* 添加插件依赖路径（通过jar方式） */
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}" as Object)
+    }
+}
+
+ext {
+    druidVersion = "1.1.10"
+    mysqlVersion = "5.1.47"
+    mybatisPlusVersion = "3.1.0"
+}
+
+/* 所有子项目的通用配置 */
+subprojects {
+    /* 使用二进制插件 */
+    apply plugin: 'java' /* java是Gradle的核心插件，是内置的，内置插件不需要配置依赖路径 */
+    apply plugin: 'idea' /* 同上  让Gradle自动生成Intellij的项目文件*/
+    /* 注意gradle插件不再自动应用，所以这里需要指定 */
+    apply plugin: 'org.springframework.boot'
+    /* 依赖管理插件仍然是一个spring-boot-gradle-plugin传递依赖，所以无需在build.gradle配置中明确列出此依赖。 */
+    apply plugin: 'io.spring.dependency-management' /* 依赖管理，用来传递spring的依赖 */
+    apply plugin: 'java-library'
+
+    group = 'meng.klj'
+    version = '0.0.1-SNAPSHOT' /* 项目版本 */
+    /* 指定jdk版本 */
+    sourceCompatibility = '1.8'
+    /* java编译的时候缺省状态下会因为中文字符而失败 */
+    [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+    repositories {
+        mavenLocal()
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+        mavenCentral()
+    }
+
+    /* 添加通用依赖 */
+    dependencies {
+        //spring boot framework
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        compile 'org.springframework.boot:spring-boot-starter-aop'
+        compile 'org.springframework.boot:spring-boot-starter-data-redis'
+
+        //for data redis lettuce pool
+        compile 'org.apache.commons:commons-pool2:2.7.0'
+        
+        //spring cloud framework
+        compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+
+        api group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
+        api group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
+
+        implementation group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: "$mybatisPlusVersion"
+        api group: 'com.baomidou', name: 'mybatis-plus', version: "$mybatisPlusVersion"
+        api group: 'com.baomidou', name: 'mybatis-plus-generator', version: "$mybatisPlusVersion"
+        
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+}
+
+configure(subprojects.findAll{it.name.endsWith("-impl")}){
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation ('org.springframework.cloud:spring-cloud-starter-netflix-eureka-client') {
+            exclude group: 'com.thoughtworks.xstream', module: 'xstream'
+        }
+        implementation ('com.thoughtworks.xstream:xstream:1.4.11.1')
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
+        implementation group: 'com.alibaba', name: 'druid-spring-boot-starter', version: "$druidVersion"
+        runtime("mysql:mysql-connector-java:$mysqlVersion")
+    }
+}
