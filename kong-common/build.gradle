@@ -3,5 +3,5 @@ jar {
 }
 
 dependencies {
-    
+    api group: 'freemarker', name: 'freemarker', version: '2.3.9'
 }
