@@ -31,9 +31,9 @@ spring:
 
   #数据源
   datasource:
-    url: jdbc:mysql://192.168.137.55:3306/user_center?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false
-    username: dangjian
-    password: uNdvlOK5vMkqU6Xx15vtmEDdxzniQiuE
+    url: jdbc:mysql://192.168.137.101:3306/kong_upms?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false
+    username: root
+    password: root
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     filters: stat
@@ -49,13 +49,6 @@ spring:
     testOnReturn: false
     poolPreparedStatements: true
     maxOpenPreparedStatements: 20
-
-    #测试
-#  redis:
-#    database: 0
-#    host: 192.168.137.57
-#    port: 6379
-#    password: 0LqWT5TZxYlttgKQZKqckF6LKGJlDoFnl6aGYSJQ29m3PD1UAFdKgAX0OJHUGLoZ
 
   redis:
     database: 3
@@ -86,15 +79,3 @@ service-center-impl:
 druid:
   userName: admin
   password: 123456
-
-#空
-feignUrl:
-  user:
-  activity:
-  message:
-  wtask:
-  web:
-  app:
-  integral:
-  community:
-  map:

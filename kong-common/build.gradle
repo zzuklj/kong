@@ -4,4 +4,11 @@ jar {
 
 dependencies {
     api group: 'freemarker', name: 'freemarker', version: '2.3.9'
+
+    implementation group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: "$mybatisPlusVersion"
+    api group: 'com.baomidou', name: 'mybatis-plus', version: "$mybatisPlusVersion"
+    api group: 'com.baomidou', name: 'mybatis-plus-generator', version: "$mybatisPlusVersion"
+
+    api group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
+    api group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
 }
