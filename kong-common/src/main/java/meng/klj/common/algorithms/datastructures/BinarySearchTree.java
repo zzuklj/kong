@@ -94,7 +94,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements ITree<T> {
         return null;
     }
 
-    protected Node getReplacementNode(Node node){git
+    protected Node getReplacementNode(Node node){
         Node replacementNode = null;
         if(node.greater != null && node.lesser != null){
             if(modifications % 2 != 0){
