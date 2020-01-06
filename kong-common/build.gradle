@@ -4,6 +4,7 @@ jar {
 
 dependencies {
     api group: 'freemarker', name: 'freemarker', version: '2.3.9'
+    api ('com.alibaba:fastjson:1.2.59')
 
     implementation group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: "$mybatisPlusVersion"
     api group: 'com.baomidou', name: 'mybatis-plus', version: "$mybatisPlusVersion"

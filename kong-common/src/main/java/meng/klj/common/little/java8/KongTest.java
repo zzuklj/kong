@@ -1,25 +1,42 @@
 package meng.klj.common.little.java8;
 
+import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import meng.klj.common.tools.dataintegrity.TestEntity;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
+@Slf4j
 public class KongTest {
 
    static Map<Integer, Integer> cache = new HashMap();
    static Map<String, AtomicInteger> strCountMap = new HashMap();
+
+   private static List<TestEntity> testEntities;
+
+    static{
+        try {
+            File f = new ClassPathResource("test.json").getFile();
+            String s = FileUtils.readFileToString(f);
+            testEntities = JSON.parseArray(s, TestEntity.class);
+
+            /*ObjectMapper mapper = new ObjectMapper();
+            JavaType javaType = mapper.getTypeFactory().constructParametricType(List.class, TestEntity.class);
+            testEntities = mapper.readValue(s, javaType);*/
+        }catch (Exception e){
+            log.info("file read error");
+        }
+    }
 
     @Test
     public void localCache(){
@@ -42,12 +59,13 @@ public class KongTest {
     }
 
     @Test
-    public void streamGo() throws IOException {
-        File f = new ClassPathResource("test.json").getFile();
-        String s = FileUtils.readFileToString(f);
-        ObjectMapper mapper = new ObjectMapper();
-        TestEntity testEntity = mapper.readValue(s, TestEntity.class);
-        String id = testEntity.getId();
-
+    public void streamGo() {
+        int sum = testEntities.stream()
+                .filter(e -> Objects.nonNull(e.getScores()))
+                .flatMap(e -> e.getScores().stream())
+                .mapToInt(Integer::new)
+                .sum();
     }
+
+
 }
