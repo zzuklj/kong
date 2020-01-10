@@ -10,8 +10,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 public class KongConfigApplication {
 
     public static void main(String[] args) {
-        AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(KongConfigApplication.class);
+       /* AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(KongConfigApplication.class);
         IUserTestService userTestService = ac.getBean(IUserTestService.class);
-        userTestService.getById(1L);
+        userTestService.getById(1L);*/
     }
 }

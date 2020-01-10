@@ -1,3 +1,4 @@
+/*
 package meng.klj.upms.test;
 
 import meng.klj.upms.entity.User;
@@ -16,3 +17,4 @@ public class UserTestServiceImpl implements IUserTestService {
         return user;
     }
 }
+*/

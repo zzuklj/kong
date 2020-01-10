@@ -68,9 +68,6 @@ spring:
   session:
     store-type: redis
 
-  resources:
-    static-locations: classpath:/static/
-
 service-center-impl:
   ribbon:
     ConnectTimeout: 60000
