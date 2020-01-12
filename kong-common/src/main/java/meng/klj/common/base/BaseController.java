@@ -10,6 +10,6 @@ public abstract class BaseController {
 
     private static final String startLogerTemplate = "{}-begin-operateBy-{}>>>param: {}";
     private static final String endLogerTemplate = "{}-end<<<return: result={}";
-git
+
     private static Cache<Class, Logger> loggerCache = CacheBuilder.newBuilder().build();
 }
