@@ -74,13 +74,11 @@ subprojects {
         api group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
         api group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
 
-        implementation group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: "$mybatisPlusVersion"
-        api group: 'com.baomidou', name: 'mybatis-plus', version: "$mybatisPlusVersion"
-        api group: 'com.baomidou', name: 'mybatis-plus-generator', version: "$mybatisPlusVersion"
+        
         
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-        testCompile group: 'junit', name: 'junit', version: '4.12'
+        compile group: 'junit', name: 'junit', version: '4.12'
     }
 
     dependencyManagement {

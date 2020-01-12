@@ -4,9 +4,19 @@ spring:
   mvc:
     throw-exception-if-no-handler-found: true
   resources:
-    add-mappings: false
+    ##add-mappings: false
+    static-locations: classpath:/static/
   main:
     allow-bean-definition-overriding: true
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    mode: HTML5
+    encoding: UTF-8
+    #开发时关闭缓存,不然没法看到实时页面
+    cache: false
+    suffix: .html
+
 ribbon:
   ReadTimeout: 60000
   SocketTimeout: 30000

@@ -14,7 +14,7 @@ public interface PropertyNameMapper {
             StringBuilder sb = new StringBuilder();
             char[] chars = keyName.toCharArray();
             for(int i = 0; i < chars.length; i++){
-                if("_".equals(chars[i])){
+                if('_' == chars[i] ){
                     sb.append(toUpperCase(chars[++i]));
                 }else{
                     sb.append(chars[i]);

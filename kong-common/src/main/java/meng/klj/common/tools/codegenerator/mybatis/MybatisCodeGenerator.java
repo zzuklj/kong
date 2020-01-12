@@ -60,12 +60,22 @@ public class MybatisCodeGenerator {
     public static class CustomStrategyConfig extends StrategyConfig{
         private String includes;
 
+        private String tablePrefixes;
+
         @Override
         public String[] getInclude() {
             if(StringUtils.isNotEmpty(includes)){
                 return includes.split(",");
             }
             return super.getInclude();
+        }
+
+        @Override
+        public String[] getTablePrefix() {
+            if(StringUtils.isNotEmpty(tablePrefixes)){
+                return tablePrefixes.split(",");
+            }
+            return super.getTablePrefix();
         }
     }
 
@@ -86,7 +96,7 @@ public class MybatisCodeGenerator {
             return Paths.get(USER_DIR,
                     customGlobalConfig.projectDir,
                     outputDir,
-                    packageConfig.getModuleName(),
+                    StringUtils.isNotEmpty(packageConfig.getModuleName()) ? packageConfig.getModuleName() : "" ,
                     tableInfo.getEntityName()+"Mapper.xml").toString();
         }
     }

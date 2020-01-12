@@ -50,7 +50,7 @@ public class PropertyFileInject {
                         propertyName = propertyName.substring(1);
                     }
                     propertyName = propertyNameMapper.key2ClassPropertyName(propertyName);
-                    Method method = ReflectionUtils.findMethod(propertyClass, "set" + StringUtils.capitalize(propertyName));
+                    Method method = ReflectionUtils.findMethod(propertyClass, "set" + StringUtils.capitalize(propertyName), null);
                     if(Objects.nonNull(method) && method.getParameterTypes().length == 1){
                         method.setAccessible(true);
                         try {

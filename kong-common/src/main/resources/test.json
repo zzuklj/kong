@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "name": "john",
+    "mobileNumber": "1273636252",
+    "modifyAt": "2019-12-01 12:12:12",
+    "scores": [20,30,40]
+  },
+  {
+    "id": "2",
+    "name": "tom",
+    "mobileNumber": "111111",
+    "modifyAt": "2019-11-01 12:12:12",
+    "scores": [21,31,41]
+  },
+  {
+    "id": "3",
+    "name": "jerry",
+    "mobileNumber": "222222"
+  },
+  {
+    "id": "4",
+    "name": "lily",
+    "mobileNumber": "333333",
+    "scores": [24,34,44]
+  },
+  {
+    "id": "5",
+    "name": "hanks",
+    "mobileNumber": "444444"
+  }
+]
