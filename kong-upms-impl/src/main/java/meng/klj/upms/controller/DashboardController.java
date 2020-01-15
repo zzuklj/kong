@@ -1,18 +1,14 @@
 package meng.klj.upms.controller;
 
 
-import com.jesper.mapper.OrderMapper;
-import com.jesper.model.Order;
-import com.jesper.model.Stats;
-
-import com.jesper.redis.DashboardKey;
-import com.jesper.redis.RedisService;
-import com.jesper.util.RunnableThreadWebCount;
+import com.alibaba.fastjson.JSON;
 import meng.klj.common.constants.DashboardKey;
+import meng.klj.common.constants.KeyPrefix;
+import meng.klj.common.tools.RunnableThreadWebCount;
+import meng.klj.upms.entity.Order;
 import meng.klj.upms.entity.Stats;
 import meng.klj.upms.mapper.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -51,57 +47,57 @@ public class DashboardController {
         Long mIncome, lastIncome;
         Integer curOrderNum, preOrderNum, curRefundOrder, lastRefundOrder, orderNum, orderSum;
 
-      /*  //全部加缓存
-        mIncome = redisService.get(DashboardKey.board, "mIncome", Long.class);
+        //全部加缓存
+        mIncome = getValueFromRedis(DashboardKey.board , "mIncome", Long.class);
         if (mIncome == null) {
             mIncome = orderMapper.selectCurPayment();
             mIncome = mIncome == null ? 0L : mIncome;
-            redisService.set(DashboardKey.board, "mIncome", mIncome);
+            stringRedisTemplate.opsForValue().set(DashboardKey.board + "mIncome", mIncome.toString());
         }
 
-        lastIncome = redisService.get(DashboardKey.board, "lastIncome", Long.class);
+        lastIncome = getValueFromRedis(DashboardKey.board , "lastIncome", Long.class);
         if (lastIncome == null) {
             lastIncome = orderMapper.selectLastPayment();
             lastIncome = lastIncome == null ? 0L : lastIncome;
-            redisService.set(DashboardKey.board, "lastIncome", lastIncome);
+            stringRedisTemplate.opsForValue().set(DashboardKey.board.getPrefix() + "lastIncome", lastIncome.toString());
         }
 
-        curOrderNum = redisService.get(DashboardKey.board, "curOrderNum", Integer.class);
+        curOrderNum = getValueFromRedis(DashboardKey.board, "curOrderNum", Integer.class);
         if (curOrderNum == null) {
             curOrderNum = orderMapper.selectCurOrderNum();
             curOrderNum = curOrderNum == null ? 0 : curOrderNum;
-            redisService.set(DashboardKey.board, "curOrderNum", curOrderNum);
+            stringRedisTemplate.opsForValue().set(DashboardKey.board.getPrefix() + "curOrderNum", curOrderNum.toString());
         }
 
-        preOrderNum = redisService.get(DashboardKey.board, "preOrderNum", Integer.class);
+        preOrderNum = getValueFromRedis(DashboardKey.board, "preOrderNum", Integer.class);
         if (preOrderNum == null) {
             preOrderNum = orderMapper.selectLastOrderNum();
             preOrderNum = preOrderNum == null ? 0 : preOrderNum;
-            redisService.set(DashboardKey.board, "preOrderNum", preOrderNum);
+            stringRedisTemplate.opsForValue().set(DashboardKey.board.getPrefix() + "preOrderNum", preOrderNum.toString());
         }
 
-        curRefundOrder = redisService.get(DashboardKey.board, "preOrderNum", Integer.class);
+        curRefundOrder = getValueFromRedis(DashboardKey.board, "preOrderNum", Integer.class);
         if (curRefundOrder == null) {
             curRefundOrder = orderMapper.selectCurRefundOrder();
             curRefundOrder = curRefundOrder == null ? 0 : curRefundOrder;
-            redisService.set(DashboardKey.board, "curRefundOrder", curRefundOrder);
+            stringRedisTemplate.opsForValue().set(DashboardKey.board.getPrefix() + "curRefundOrder", curRefundOrder.toString());
         }
 
-        lastRefundOrder = redisService.get(DashboardKey.board, "lastRefundOrder", Integer.class);
+        lastRefundOrder = getValueFromRedis(DashboardKey.board, "lastRefundOrder", Integer.class);
         if (lastRefundOrder == null) {
             lastRefundOrder = orderMapper.selectLastRefundOrder();
             lastRefundOrder = lastRefundOrder == null ? 0 : lastRefundOrder;
-            redisService.set(DashboardKey.board, "lastRefundOrder", lastRefundOrder);
+            stringRedisTemplate.opsForValue().set(DashboardKey.board.getPrefix() + "lastRefundOrder", lastRefundOrder.toString());
         }
 
         int count = RunnableThreadWebCount.addCount("111");
         stats.setPv(count);//访问量
         stats.setOrderNumPer(getPer(curOrderNum, preOrderNum));//月订单数环比
-        stats.setmOrderNum(orderMapper.selectCurOrderNum());//月订单数
-        stats.setmIncome(mIncome);//月收入
+        stats.setMOrderNum(orderMapper.selectCurOrderNum());//月订单数
+        stats.setMIncome(mIncome);//月收入
         stats.setIncomePer(getPer(mIncome, lastIncome));//月收入环比
-        stats.setmOrderRefund(orderMapper.selectCurRefundOrder());
-        stats.setmOrderRefundPer(getPer(curRefundOrder, lastRefundOrder));
+        stats.setMOrderRefund(orderMapper.selectCurRefundOrder());
+        stats.setMOrderRefundPer(getPer(curRefundOrder, lastRefundOrder));
 
         model.addAttribute("dashboard", stats);
 
@@ -110,37 +106,30 @@ public class DashboardController {
 
         Date now = new Date();
         //获取三十天前日期
-        Calendar theCa = Calendar.getInstance();
-        theCa.setTime(now);
-        theCa.add(theCa.DATE, -31);//最后一个数字30可改，30天的意思
-
-        Date temp = new Date();
         Order order = new Order();
         for (int i = 0; i < 31; i++) {
-            theCa.add(theCa.DATE, 1);
-            temp = theCa.getTime();
-            order.setCreateTime(temp);
+            order.setCreateTime(LocalDate.now().minusDays(30 - i).atStartOfDay());
             //每天的订单数
-            orderNum = redisService.get(DashboardKey.board, "orderNum", Integer.class);
+            orderNum = getValueFromRedis(DashboardKey.board, "orderNum", Integer.class);
             if (orderNum == null) {
                 orderNum = orderMapper.selectDayOrderNum(order);
                 orderNum = orderNum == null ? 0 : orderNum;
-                redisService.set(DashboardKey.board, "orderNum", orderNum);
+                stringRedisTemplate.opsForValue().set(DashboardKey.board.getPrefix() + "orderNum", orderNum.toString());
             }
 
             //每天的收入
-            orderSum = redisService.get(DashboardKey.board, "orderSum", Integer.class);
+            orderSum = getValueFromRedis(DashboardKey.board, "orderSum", Integer.class);
             if (orderSum == null) {
                 orderSum = orderMapper.selectDayOrderSum(order);
                 orderSum = orderSum == null ? 0 : orderSum;
-                redisService.set(DashboardKey.board, "orderSum", orderSum);
+                stringRedisTemplate.opsForValue().set(DashboardKey.board.getPrefix() + "orderSum", orderSum.toString());
             }
             data2.add(orderNum);
             data3.add(orderSum);
         }
 
         model.addAttribute("data2", data2);
-        model.addAttribute("data3", data3);*/
+        model.addAttribute("data3", data3);
         return "dashboard";
     }
 
@@ -157,5 +146,11 @@ public class DashboardController {
     @ResponseBody
     public int count(@RequestParam("key") String key) {
         return RunnableThreadWebCount.addCount(key);
+    }
+
+    private <T> T getValueFromRedis(KeyPrefix prefix, String keySuf , Class<T> t){
+        String value = stringRedisTemplate.opsForValue().get(prefix.getPrefix() + keySuf);
+        T v = JSON.parseObject(value, t);
+        return v;
     }
 }

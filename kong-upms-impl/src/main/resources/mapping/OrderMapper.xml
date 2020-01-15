@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="meng.klj.upms.mapper.OrderMapper">
+    <select id="selectCurPayment" resultType="java.lang.Long">
+        SELECT SUM(payment) FROM tb_order
+        where status = 5 AND date_format(create_time, '%Y-%m') = date_format(now(), '%Y-%m')
+    </select>
+
+    <select id="selectLastPayment" resultType="java.lang.Long">
+        SELECT SUM(payment) FROM tb_order
+        where  status = 5 AND  period_diff(date_format(now(),'%Y%m'), date_format(create_time,'%Y%m')) = 1
+    </select>
+
+    <select id="selectCurOrderNum" resultType="java.lang.Integer">
+      select count(*) from tb_order where date_format( create_time, '%Y-%m') = date_format(now(), '%Y-%m')
+     </select>
+
+    <select id="selectLastOrderNum" resultType="java.lang.Integer">
+        select count(*) from tb_order where period_diff(date_format(now(),'%Y%m'), date_format(create_time,'%Y%m')) = 1
+    </select>
+
+    <select id="selectCurRefundOrder" resultType="java.lang.Integer">
+
+        SELECT count(*) FROM tb_order
+        where date_format(update_time, '%Y-%m') = date_format(now(), '%Y-%m')
+        AND  refundStatus = 3
+    </select>
+
+    <select id="selectLastRefundOrder" resultType="java.lang.Integer">
+
+        SELECT count(*) FROM tb_order
+        where period_diff(date_format(now(),'%Y%m'), date_format(update_time,'%Y%m')) = 1
+        AND  refundStatus = 3
+    </select>
+
+    <select id="selectDayOrderNum" parameterType="meng.klj.upms.entity.Order" resultType="java.lang.Integer">
+        SELECT count(*) FROM tb_order
+        WHERE create_time BETWEEN  #{createTime, jdbcType=DATE} AND  date_add(#{createTime, jdbcType=DATE}, interval 1 day)
+    </select>
+
+    <select id="selectDayOrderSum" parameterType="meng.klj.upms.entity.Order" resultType="java.lang.Integer">
+        SELECT sum(payment) FROM tb_order
+        WHERE create_time BETWEEN  #{createTime, jdbcType=DATE} AND  date_add(#{createTime, jdbcType=DATE}, interval 1 day)
+    </select>
 
 </mapper>

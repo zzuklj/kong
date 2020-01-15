@@ -13,4 +13,19 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface OrderMapper extends BaseMapper<Order> {
 
+    Long selectCurPayment();
+
+    Long selectLastPayment();
+
+    Integer selectCurOrderNum();
+
+    Integer selectLastOrderNum();
+
+    Integer selectCurRefundOrder();
+
+    Integer selectLastRefundOrder();
+
+    Integer selectDayOrderNum(Order order);
+
+    Integer selectDayOrderSum(Order order);
 }
