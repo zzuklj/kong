@@ -4,7 +4,9 @@ import meng.klj.upms.entity.OrderItem;
 import meng.klj.upms.mapper.OrderItemMapper;
 import meng.klj.upms.service.IOrderItemService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -16,6 +18,13 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class OrderItemServiceImpl extends ServiceImpl<OrderItemMapper, OrderItem> implements IOrderItemService {
+public class OrderItemServiceImpl extends ServiceImpl<OrderItemMapper, OrderItem> implements IOrderItemService  {
 
+    @Transactional
+    public void updateItem(){
+        OrderItem updateOne = new OrderItem();
+        updateOne.setId(2L);
+        updateOne.setNum(2);
+        updateById(updateOne);
+    }
 }

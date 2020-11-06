@@ -17,12 +17,12 @@ import meng.klj.common.base.BaseController;
  * @author klj
  * @since 2020-01-10
  */
-@Api(tags = {"接口"})
+@Api(tags = {"订单实体接口"})
 @RestController
 @RequestMapping("/api/order-item")
 public class OrderItemController extends BaseController {
 
-  @Autowired
-  private IOrderItemService iOrderItemService;
+  /*@Autowired
+  private IOrderItemService iOrderItemService;*/
 
 }

@@ -17,7 +17,7 @@ import meng.klj.common.base.BaseController;
  * @author klj
  * @since 2020-01-10
  */
-@Api(tags = {"接口"})
+@Api(tags = {"ordershipping接口"})
 @RestController
 @RequestMapping("/api/order-shipping")
 public class OrderShippingController extends BaseController {

@@ -22,7 +22,7 @@ import java.time.LocalDate;
  * @author klj
  * @since 2020-01-10
  */
-@Api(tags = {"接口"})
+@Api(tags = {"用户接口"})
 @Controller
 public class UserController{
 

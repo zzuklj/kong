@@ -52,7 +52,7 @@ spring:
 
   redis:
     database: 3
-    host: 192.168.137.55
+    host: 192.168.137.101
     port: 6379
     password: NMNgPYbG21GNT80JqqSneVzwj5sfQZt87tKc9RLqdf7oo8uyyuRsh9yGsI2wesiH
     timeout: 15000

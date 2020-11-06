@@ -7,14 +7,21 @@ import lombok.extern.slf4j.Slf4j;
 import meng.klj.common.tools.dataintegrity.TestEntity;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 public class KongTest {
@@ -60,11 +67,33 @@ public class KongTest {
 
     @Test
     public void streamGo() {
-        int sum = testEntities.stream()
+        /*int sum = testEntities.stream()
                 .filter(e -> Objects.nonNull(e.getScores()))
                 .flatMap(e -> e.getScores().stream())
                 .mapToInt(Integer::new)
-                .sum();
+                .sum();*/
+
+        /*Function<TestEntity, String> f = (e) -> e.getId()+"_"+e.getName();
+        Map<String, List<TestEntity>> collect = testEntities.stream().collect(Collectors.groupingBy(f));
+
+        List<Object> tom = collect.entrySet().stream()
+                .filter(distinctByKey(u -> u.get))
+                .map(e -> {
+            return e.getValue().get(0).getName();
+        }).collect(toList());
+        tom.size();*/
+
+        List<String> collect = testEntities.stream()
+                .filter(distinctByKey(e -> e.getUserId() + "_" + e.getUnitId()))
+                .map(e -> e.getMobileNumber())
+                .collect(toList());
+        System.out.println(collect.size());
+
+    }
+
+    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Map<Object,Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
 

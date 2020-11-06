@@ -1,5 +1,6 @@
 package meng.klj.upms.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -16,15 +17,13 @@ import meng.klj.common.base.BaseEntity;
  * @since 2020-01-10
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("tb_order")
-public class Order extends BaseEntity {
-
-    private static final long serialVersionUID = 1L;
+public class Order {
 
     /**
      * 订单id
      */
+    @TableId
     private String orderId;
 
     /**
