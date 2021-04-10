@@ -1,11 +1,11 @@
 package meng.klj.common.algorithms.datastructures;
 
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.sun.jmx.remote.internal.ArrayQueue;
-import org.apache.logging.log4j.util.Strings;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 
 import java.lang.reflect.Array;
 import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 
 public class BinarySearchTree<T extends Comparable<T>> implements ITree<T> {
 
@@ -80,8 +80,8 @@ public class BinarySearchTree<T extends Comparable<T>> implements ITree<T> {
 
     @Override
     public T remove(T value) {
-
-        return null;
+        removeValue(value);
+        return value;
     }
 
     protected Node removeValue(T value){
@@ -93,21 +93,22 @@ public class BinarySearchTree<T extends Comparable<T>> implements ITree<T> {
     protected Node removeNode(Node<T> node){
         if(node != null){
             Node<T> replacementNode = getReplacementNode(node);
-
+            replaceNodeWithNode(node, replacementNode);
         }
-        return null;
+        return node;
     }
 
     protected Node getReplacementNode(Node node){
         Node replacementNode = null;
         if(node.greater != null && node.lesser != null){
+            //取起始节点左子树最大值或取右子树最小值
             if(modifications % 2 != 0){
-                replacementNode = getGreatest(node);
+                replacementNode = getGreatest(node.lesser);
                 if(replacementNode == null){
                     replacementNode = node.lesser;
                 }
             }else{
-                replacementNode = getLeast(node);
+                replacementNode = getLeast(node.greater);
                 if(replacementNode == null){
                     replacementNode = node.greater;
                 }
@@ -139,6 +140,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements ITree<T> {
             }
 
             //更新替换节点父节点及原左右节点关联关系
+            //替换节点肯定为叶子节点（左子树最大节点或右子树最小节点）
             Node<T> replacementParent = replacementNode.parent;
             /*if(replacementNodeParent != null && replacementNodeParent != nodeToRemoved){
                 replacementNodeParent = nodeToRemoved.parent;
@@ -156,7 +158,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements ITree<T> {
                     if(replacementNodeGreater != null){
                         replacementNodeGreater.parent = replacementParent;
                     }
-                }else if(replacementParentGreater != null && replacementNodeGreater == replacementNode){
+                }else if(replacementParentGreater != null && replacementParentGreater == replacementNode){
                     replacementParent.greater = replacementNodeLesser;
                     if(replacementNodeLesser != null){
                         replacementNodeLesser.parent = replacementParent;
@@ -165,6 +167,24 @@ public class BinarySearchTree<T extends Comparable<T>> implements ITree<T> {
             }
 
            //todo
+            Node<T> removeParent = nodeToRemoved.parent;
+            if(removeParent == null){
+                root = replacementNode;
+                if(root != null){
+                    root.parent = null;
+                }
+            }else if(removeParent.lesser != null && removeParent.lesser.id.compareTo(nodeToRemoved.id) == 0){
+                removeParent.lesser = replacementNode;
+                if(replacementNode != null ){
+                    replacementNode.parent = removeParent;
+                }
+            }else if(removeParent.greater != null && removeParent.greater.id.compareTo(nodeToRemoved.id) == 0){
+                removeParent.greater = replacementNode;
+                if(replacementNode != null){
+                    replacementNode.parent = removeParent;
+                }
+            }
+            size--;
         }
     }
 
@@ -260,6 +280,32 @@ public class BinarySearchTree<T extends Comparable<T>> implements ITree<T> {
         return null;
     }
 
+    public List<Object> getDFS(){
+        if(root == null){
+            return null;
+        }
+
+        List<Node<T>> finalList = new ArrayList<>();
+        finalList.add(root);
+        List<Node<T>> nextDepthNode = getNextDepthNode(finalList);
+        while(CollectionUtils.isNotEmpty(nextDepthNode)){
+            finalList.addAll(nextDepthNode);
+            nextDepthNode = getNextDepthNode(nextDepthNode);
+        }
+        return finalList.stream().map(Node::getId).collect(toList());
+    }
+
+    private <T extends Comparable<T>> List<Node<T>> getNextDepthNode(List<Node<T>> currentNodes){
+        ArrayList<Node<T>> nextDepthNodes = new ArrayList<>();
+        for(Node node : currentNodes){
+            Node lesser = node.lesser;
+            Node greater = node.greater;
+            if(Objects.nonNull(lesser)) nextDepthNodes.add(lesser);
+            if(Objects.nonNull(greater)) nextDepthNodes.add(greater);
+        }
+        return nextDepthNodes;
+    }
+
 
     protected static class Node<T>{
         protected T id = null;
@@ -270,6 +316,10 @@ public class BinarySearchTree<T extends Comparable<T>> implements ITree<T> {
         public Node(T id, Node<T> parent) {
             this.id = id;
             this.parent = parent;
+        }
+
+        public T getId(){
+            return this.id;
         }
 
         @Override
@@ -287,6 +337,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements ITree<T> {
         Integer[] ints = {2, 5, 6, 3, 9, 45, 67};
         BinarySearchTree<Integer> bst = new BinarySearchTree<>();
         Arrays.stream(ints).forEach(i -> bst.add(i));
+        List<Object> dfs = bst.getDFS();
         Integer[] bfs = getBFS(bst.root, bst.size);
         System.out.println(Arrays.asList(bfs));
     }
