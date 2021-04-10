@@ -1,6 +1,9 @@
 package meng.klj.upms.controller;
 
 
+import meng.klj.common.base.JsonResult;
+import meng.klj.upms.vo.UserVo;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import io.swagger.annotations.*;
@@ -24,5 +27,10 @@ public class CategoryController extends BaseController {
 
   @Autowired
   private ICategoryService iCategoryService;
+
+  @GetMapping("/test")
+  public JsonResult<String> getTest(UserVo userVo){
+    return null;
+  }
 
 }
