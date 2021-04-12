@@ -16,4 +16,7 @@ public interface IUserService extends IService<User> {
     User selectByNameAndPwd(User user);
 
     void selectIsName(User user);
+
+    void add(User user);
+    void add2(User user);
 }

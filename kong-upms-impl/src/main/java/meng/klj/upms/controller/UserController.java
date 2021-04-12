@@ -155,4 +155,18 @@ public class UserController{
         return "redirect:userManage";
     }
 
+    @PostMapping("/user/add")
+    public String userManageAdd(User user) {
+        user.setUpdateDate(LocalDate.now());
+        userService.add(user);
+        httpSession.setAttribute("user",user);
+        return "redirect:userManage";
+    }
+
+    @PostMapping("/user/add/2")
+    public String userManageAdd2(User user) {
+        userService.add2(user);
+        return "null";
+    }
+
 }
