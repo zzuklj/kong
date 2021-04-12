@@ -25,6 +25,11 @@ public class TestEntity {
     private LocalDateTime modifyAt;
 
     private List<Integer> scores;
+
+    private String userId;
+
+    private String unitId;
+
 }
 
 

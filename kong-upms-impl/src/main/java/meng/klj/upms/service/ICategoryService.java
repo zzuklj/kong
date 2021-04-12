@@ -11,6 +11,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author klj
  * @since 2020-01-10
  */
-public interface ICategoryService extends IService<Category> {
+public interface ICategoryService {
 
+    Category getCateById(Long id);
+
+    void save(Category category);
 }

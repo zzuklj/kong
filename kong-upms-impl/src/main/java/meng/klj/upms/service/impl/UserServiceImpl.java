@@ -1,13 +1,18 @@
 package meng.klj.upms.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import javafx.util.Builder;
+import meng.klj.upms.entity.Category;
 import meng.klj.upms.entity.User;
 import meng.klj.upms.mapper.UserMapper;
 import meng.klj.upms.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -20,6 +25,9 @@ import java.util.Objects;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
+
+    @Autowired
+    CategoryServiceImpl categoryService;
 
     @Override
     public User selectByNameAndPwd(User user) {
@@ -36,5 +44,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if(Objects.isNull(one)){
             throw new RuntimeException("");
         }
+    }
+
+    @Override
+    @Transactional
+    public void add(User user) {
+
+       addCategory();
+
+        save(user);
+    }
+
+    @Override
+    public void add2(User user) {
+        addCategory();
+        save(user);
+    }
+
+    private void addCategory(){
+        Category category = new Category();
+        category.setId(12345L);
+        category.setName("testCate");
+        categoryService.save(category);
     }
 }

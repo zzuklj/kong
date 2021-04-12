@@ -1,9 +1,11 @@
 package meng.klj.common.algorithms.datastructures;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.sun.jmx.remote.internal.ArrayQueue;
 
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -248,7 +250,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements ITree<T> {
     }
 
     public static <T extends Comparable<T>> T[] getBFS(Node<T> start, int size){
-        Queue<Node<T>> queue = new ArrayDeque<>(size);
+        Queue<Node<T>> queue = new LinkedList<Node<T>>();
         T[] values =  (T[])Array.newInstance(start.id.getClass(), size);
         int count = 0;
         Node<T> node = start;
@@ -280,19 +282,23 @@ public class BinarySearchTree<T extends Comparable<T>> implements ITree<T> {
         return null;
     }
 
-    public List<Object> getDFS(){
+    public T[] getBFSByIterator(Node<T> start, int size){
         if(root == null){
             return null;
         }
 
-        List<Node<T>> finalList = new ArrayList<>();
-        finalList.add(root);
+        List<Node<T>> finalList = new ArrayList<Node<T>>();
+        finalList.add(start);
         List<Node<T>> nextDepthNode = getNextDepthNode(finalList);
         while(CollectionUtils.isNotEmpty(nextDepthNode)){
             finalList.addAll(nextDepthNode);
             nextDepthNode = getNextDepthNode(nextDepthNode);
         }
-        return finalList.stream().map(Node::getId).collect(toList());
+
+        T[] ts = (T[]) Array.newInstance(start.id.getClass(), size);
+        IntStream.range(0, size).boxed().forEach(i -> ts[i] = finalList.get(i).id);
+
+        return ts;
     }
 
     private <T extends Comparable<T>> List<Node<T>> getNextDepthNode(List<Node<T>> currentNodes){
@@ -337,7 +343,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements ITree<T> {
         Integer[] ints = {2, 5, 6, 3, 9, 45, 67};
         BinarySearchTree<Integer> bst = new BinarySearchTree<>();
         Arrays.stream(ints).forEach(i -> bst.add(i));
-        List<Object> dfs = bst.getDFS();
+        Integer[] bfsByIterator = bst.getBFSByIterator(bst.root, bst.size);
         Integer[] bfs = getBFS(bst.root, bst.size);
         System.out.println(Arrays.asList(bfs));
     }

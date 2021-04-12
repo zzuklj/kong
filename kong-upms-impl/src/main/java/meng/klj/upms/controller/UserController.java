@@ -22,7 +22,7 @@ import java.time.LocalDate;
  * @author klj
  * @since 2020-01-10
  */
-@Api(tags = {"接口"})
+@Api(tags = {"用户接口"})
 @Controller
 public class UserController{
 
@@ -153,6 +153,20 @@ public class UserController{
         userService.updateById(user);
         httpSession.setAttribute("user",user);
         return "redirect:userManage";
+    }
+
+    @PostMapping("/user/add")
+    public String userManageAdd(User user) {
+        user.setUpdateDate(LocalDate.now());
+        userService.add(user);
+        httpSession.setAttribute("user",user);
+        return "redirect:userManage";
+    }
+
+    @PostMapping("/user/add/2")
+    public String userManageAdd2(User user) {
+        userService.add2(user);
+        return "null";
     }
 
 }

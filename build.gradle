@@ -73,12 +73,13 @@ subprojects {
 
         api group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
         api group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
-
-        
         
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
         compile group: 'junit', name: 'junit', version: '4.12'
+
+        compile group: 'org.openjdk.jmh', name: 'jmh-core', version: '1.21'
+        compile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.21'
     }
 
     dependencyManagement {
