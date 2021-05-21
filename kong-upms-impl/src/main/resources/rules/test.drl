@@ -1,0 +1,10 @@
+package rules;
+import meng.klj.upms.entity.User
+dialect  "java"
+
+rule "activeUser"
+    when
+        $u : User(state == 1)
+    then
+        System.out.println("this is " + $u.getUserName());
+end

@@ -7,4 +7,5 @@ dependencies {
     implementation project(':kong-upms-api')
 
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.2.1.RELEASE'
+    compile group: 'org.drools', name: 'drools-compiler', version: '7.5.0.Final'
 }

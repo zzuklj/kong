@@ -3,9 +3,6 @@ package meng.klj.common.kafka;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
-import java.time.LocalDateTime;
-import java.util.Properties;
-
 public class Producer {
 
     static final String TOPIC = "test-klj";

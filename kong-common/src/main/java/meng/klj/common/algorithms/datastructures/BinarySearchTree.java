@@ -1,13 +1,10 @@
 package meng.klj.common.algorithms.datastructures;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.sun.jmx.remote.internal.ArrayQueue;
 
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.IntStream;
-
-import static java.util.stream.Collectors.toList;
 
 public class BinarySearchTree<T extends Comparable<T>> implements ITree<T> {
 

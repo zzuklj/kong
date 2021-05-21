@@ -1,16 +1,14 @@
 package meng.klj.upms.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import meng.klj.upms.entity.Order;
 import meng.klj.upms.mapper.OrderMapper;
 import meng.klj.upms.service.IOrderItemService;
 import meng.klj.upms.service.IOrderService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
-import sun.nio.ch.ThreadPool;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.*;
