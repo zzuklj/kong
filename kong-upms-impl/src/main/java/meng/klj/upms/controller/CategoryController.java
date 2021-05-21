@@ -6,6 +6,9 @@ import meng.klj.upms.entity.User;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import meng.klj.common.base.JsonResult;
+import meng.klj.upms.vo.UserVo;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import io.swagger.annotations.*;
@@ -35,5 +38,10 @@ public class CategoryController extends BaseController {
         Category c = iCategoryService.getCateById(id);
         return "";
     }
+
+  @GetMapping("/test")
+  public JsonResult<String> getTest(UserVo userVo){
+    return null;
+  }
 
 }
